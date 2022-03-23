@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Nota;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Auth;
 
 class NotaController extends Controller
 {
@@ -15,8 +16,8 @@ class NotaController extends Controller
      */
     public function index()
     {
-        $notas = Nota::get();
-        return Inertia::render('Nota/Index',
+        $notas = Nota::where('users_id',Auth::id())->get();
+        return Inertia::render('Notas/Index',
         ['notas'=> $notas]);
     }
 
@@ -28,7 +29,7 @@ class NotaController extends Controller
     public function create()
     {
         $notas = Nota::get();
-        return Inertia::render('Nota/Create');
+        return Inertia::render('Notas/Create');
     }
 
     /**
@@ -44,8 +45,11 @@ class NotaController extends Controller
             'contenido' => 'required',
         ]);
 
-        Nota::create($request->all());
-
+        $nota = new Nota;
+        $nota->titulo = $request->titulo;
+        $nota->contenido = $request->contenido;
+        $nota->users_id = AUTH::id();
+        $nota->save();
         return redirect()->route('noticias.index');
     }
 
@@ -55,9 +59,14 @@ class NotaController extends Controller
      * @param  \App\Models\Nota  $nota
      * @return \Illuminate\Http\Response
      */
-    public function show(Nota $nota)
+    public function show($id)
     {
-        //
+        $nota = Nota::where('id',$id)->where('users_id',Auth::id())->first();
+
+        return Inertia::render('Notas/Show',[
+            'nota' => $nota
+        ]);
+
     }
 
     /**
@@ -66,9 +75,13 @@ class NotaController extends Controller
      * @param  \App\Models\Nota  $nota
      * @return \Illuminate\Http\Response
      */
-    public function edit(Nota $nota)
+    public function edit($id)
     {
-        //
+        $nota = Nota::where('id',$id)->where('users_id',Auth::id())->first();
+
+        return Inertia::render('Notas/Edit', [
+            'nota' => $nota
+        ]);
     }
 
     /**
@@ -78,9 +91,17 @@ class NotaController extends Controller
      * @param  \App\Models\Nota  $nota
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Nota $nota)
+    public function update(Request $request, $id)
     {
-        //
+        
+        $request->validate([
+            'titulo' => 'required',
+            'contenido' => 'required',
+        ]);
+        $nota = Nota::where('id',$id)->where('users_id',Auth::id())->first();
+
+        $nota -> update($request->all());
+        return redirect()->route('noticias.index')->with('status', 'La noticia se actualizo');
     }
 
     /**
@@ -89,8 +110,12 @@ class NotaController extends Controller
      * @param  \App\Models\Nota  $nota
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Nota $nota)
+    public function destroy($id)
     {
-        //
+        $nota = Nota::where('id',$id)->where('users_id',Auth::id())->first();
+
+        $nota -> delete();
+        return redirect()->route('noticias.index');
+
     }
 }

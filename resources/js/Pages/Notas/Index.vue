@@ -9,13 +9,21 @@
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                    <table>
-                        <tr v-for="nota in notas" :key="nota.id">
-                            <td>
-                                {{nota.titulo}}
-                            </td>
-                        </tr>
-                    </table>
+                    <inertia-link :href="route('noticias.create')">
+                        Crear
+                   </inertia-link>
+                        <table>
+                            <tr v-for="nota in notas" :key="nota.id">
+                                <td>
+                                    {{nota.titulo}}
+                                </td>
+                                <td>
+                                    <inertia-link :href="route('noticias.show', nota.id)">
+                                        ver
+                                    </inertia-link>
+                                </td>
+                            </tr>
+                        </table>
                 </div>
             </div>
         </div>

@@ -22,7 +22,12 @@
                                 <jet-nav-link :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </jet-nav-link>
+                            </div><div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <jet-nav-link :href="route('noticias.index')" :active="route().current('noticias.*')">
+                                    Noticias
+                                </jet-nav-link>
                             </div>
+
                         </div>
 
                         <div class="hidden sm:flex sm:items-center sm:ml-6">
@@ -225,6 +230,9 @@
 
             <!-- Page Content -->
             <main>
+                 <div v-if="$page.props.flash.status" class="bg-blue-500 text-white text-sm font-bold p-4">
+                    <p>{{ $page.props.flash.status }}</p>
+                </div>
                 <slot></slot>
             </main>
         </div>
