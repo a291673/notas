@@ -27,19 +27,17 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    /*$news_by_category = DB::table('notas')
+    $news_by_category = DB::table('notas')
         ->join('categories', 'notas.categories_id', "=", 'categories.id')
         ->where('users_id', Auth::id())
         ->select(DB::raw('category_name, count(categories.id) as total'))
         ->groupBy('category_name','categories.id')
         ->orderBy('total','desc')
-        ->get();*/
-    return Inertia::render('Dashboard');
-})->name('dashboard');
-/*    return Inertia::render('Dashboard',[
+        ->get();
+    return Inertia::render('Dashboard',[
     'news_by_category' => $news_by_category
 ]);
-})->name('dashboard');*/
+})->name('dashboard');
 
 Route::resource('noticias', NotaController::class);
 
